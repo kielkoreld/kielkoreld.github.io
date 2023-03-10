@@ -1,3 +1,3 @@
-# kielkoreld.github.io
+# 과제 제출
 
-*깃허브* 처음 써본당
+그렇다
