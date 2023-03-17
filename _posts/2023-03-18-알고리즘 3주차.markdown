@@ -1,0 +1,101 @@
+---
+layout: post
+title:  "알고리즘 3주차"
+date:   2023-03-18 00:47:00 +0900
+categories: jekyll update
+---
+[강의 노트](https://www.notion.so/3-085ed73009024a1db29f9357f785b5ef?pvs=4)
+
+양자 알고리즘에 대하여 조금 조사를 해봤다.\
+결국 양자 컴퓨터를 통하여 실행하는 알고리즘인데, 양자 컴퓨터는 또 뭘까?
+큐비트도 되게 생소하고 양자역학이라는 학문이 워낙 유명하니 익히 들었지만,\
+그 내용을 모르니 그저 미지의 영역일 뿐이다.\
+나중에 양자역학에 대해 배울 기회가 있다면 좋겠다. 내 삶에 도움이 될련지는 모르겠지만 말이다.
+
+균등 분포에 대한 정확한 개념이 잡히질 않았다.\
+모든 확률이 동일하다는 것은 알지만, 확률을 다뤄보지 않아서 확실히 와닿진 않는다.\
+확률에 대한 공부를 한 후에 **정보를 추가**하거나 따로 정리해서 **링크를 추가**시킬 생각이다.
+
+
+상각 시각에 대한 개념도 다른 블로그를 통하여 어느 정도 정리해봤다.\
+프로그래밍에 회계 개념이나 퍼텐셜 에너지의 개념을 적용시키는 것이 생소하다.\
+그다지 중요하진 않은 듯하니 저런 방법이 있다는 것 정도만 참고하면 될 듯하다.
+
+
+기본적인 틀을 짜고 **chatGPT**에게 첨삭을 받았다.\
+홀수인 경우에 제어하는 방법과 디버깅에서 발견되지 않는 오류를 잡아주었다.\
+자바를 안 쓴지 너무 오래되어서 몇몇 문법을 잊어버렸다. **빠르게 복습해야 할 듯 하다.**
+
+
+사실 실습 시간에 마무리를 내리고 싶었는데 그러지 못해서 꽤나 짜증났었다.\
+집에 와서 금방 만들었으니 그나마 감정을 삭힐 수 있었지만,\
+남은 하는데 나는 못한다는 사실이 내가 뒤처지고 있다는 느낌을 준다.\
+비교는 좋지 않고 이런 불안은 강박만 증가시키겠지만, 이 감정을 조절할 수가 없다.\
+언젠가 이게 나에게 독이 될 수 있으니 그 전까지 이 습관을 내 무기로 삼아야 하는데...
+
+
+아무튼 이 밑은 내가 짠 코드이다. 오랜만에 코드를 짜다보니 ***효율성***은 그다지 고려를 못했다.\
+그나마 다행인 점은 동작은 한다는 점이다. 동작만 하면 일단 어느 정도는 성공이라고 생각한다.\
+이를 ***효율적***으로 돌리는 것, 즉 ***유지 및 보수***는 나중의 일이다.
+
+{% highlight JAVA %}
+import java.util.Scanner;
+public class MergeSortExample {
+    public static void mergeSort(int[] arr) {
+        if (arr.length > 1) {
+            int mid = arr.length / 2;
+            int[] left = new int[mid];
+            int[] right = new int[arr.length - mid]; //배열이 홀수인 경우를 대비
+
+            for (int i = 0; i < arr.length; i++) { //슬라이싱 방법 찾아보기
+                if (i < mid) {
+                    left[i] = arr[i];
+                } else {
+                    right[i - mid] = arr[i];
+                }
+            }
+
+            mergeSort(left); //재귀함수
+            mergeSort(right);
+
+            int i = 0, j = 0, k = 0; // 합병
+            while (i < left.length && j < right.length) {
+                if (left[i] < right[j]) {
+                    arr[k] = left[i];
+                    i++;
+                } else {
+                    arr[k] = right[j];
+                    j++;
+                }
+                k++;
+            }
+            // 남은 배열 삽입
+            while (i < left.length) {
+                arr[k] = left[i];
+                i++;
+                k++;
+            }
+            while (j < right.length) {
+                arr[k] = right[j];
+                j++;
+                k++;
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int size = sc.nextInt();
+        int[] origin = new int[size];
+        for(int i=0; i<origin.length; i++){
+            int temp = sc.nextInt();
+            origin[i]=temp;
+        }
+        mergeSort(origin);
+        for(int num:origin){
+            System.out.print(num+" ");
+        }
+        sc.close();
+    }
+}
+{% endhighlight %}
