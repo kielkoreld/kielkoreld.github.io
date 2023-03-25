@@ -38,6 +38,11 @@ categories: jekyll update
 그나마 다행인 점은 동작은 한다는 점이다. 동작만 하면 일단 어느 정도는 성공이라고 생각한다.\
 이를 ***효율적***으로 돌리는 것, 즉 ***유지 및 보수***는 나중의 일이다.
 
+---
+
+슬라이싱을 하는 방법에 대해 찾아봤는데 따로 기능은 없고 *Arrays.copyOfRange()* 혹은 *System.arraycopy()*를 사용해야 한다.\
+이를 수행하면 배열을 분할하는 과정에서 시간 복잡도가 조금은 나아질 것이다. 하지만 굳이 대체할 필요성까지는 느끼지 못하니 일단 이대로 두려고 한다.
+
 {% highlight JAVA %}
 import java.util.Scanner;
 public class MergeSortExample {
@@ -47,7 +52,7 @@ public class MergeSortExample {
             int[] left = new int[mid];
             int[] right = new int[arr.length - mid]; //배열이 홀수인 경우를 대비
 
-            for (int i = 0; i < arr.length; i++) { //슬라이싱 방법 찾아보기
+            for (int i = 0; i < arr.length; i++) {
                 if (i < mid) {
                     left[i] = arr[i];
                 } else {
