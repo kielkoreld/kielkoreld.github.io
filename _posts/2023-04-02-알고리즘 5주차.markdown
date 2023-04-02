@@ -1,0 +1,286 @@
+---
+layout: post
+title:  "알고리즘 5주차"
+date:   2023-04-02 02:38:00 +0900
+categories: jekyll update
+---
+[강의 노트](https://harmonious-beluga-1f5.notion.site/5-6522bcdc0304475dafad8785e5e0e436)
+
+최소 신장 트리를 구현하는데 얼마나 애를 먹었는지 골치가 아플 지경이다.\
+동작 원리를 아는 것과 이를 구현하는 것은 다르다.\
+심지어 자료구조를 배운지 1년 반은 됐으니까. 이 글을 쓰고 C에서 배열로 구현한 것을 보며 다시 복습해야지.
+
+이번에 구현한 것은 ChatGPT와 어느 부분이 오류가 생겼고 왜 생겼는지 치열하게 묻고 답하며 얻은 것이다.\
+처음에는 제대로 결과도 도출을 못 시키는 멍청한 기계쉑이라고 생각했는데 역시 기계는 쳐맞으면 말을 잘 듣는다.\
+사실 코드도 어느 정도 이해는 된다. 하지만 대략적인 흐름만 이해했을 뿐이지 절차에 맞게 정확히 이해한 것은 아니라\
+아직은 내 마음에 들지 않는다. 조만간 시간이 많이 남거나 아예 방학에 다시 복습할 계획이다.\
+지금 공부하기에는 수학 문제를 조금 더 많이 풀어보는 것이 좋을 것 같으니까. 망할 공업수학과 선형대수학..
+
+## 최근접 점의 쌍 찾기
+
+최근접 점의 쌍 찾는 프로그램은 분할 정복 알고리즘으로 짜려 했으나 계속되는 오류로 여기서 만족을 하려고 한다.\
+이 알고리즘은 일반적인 방법은 ***브루트포스 방식***보다는 효율적이지만, ***분할 정복 알고리즘***보다는 효율이 떨어진다.\
+일단 코드는 잘 동작한다.
+<details>
+  <summary>최근접 점의 쌍 찾기</summary>
+  {% highlight JAVA %}
+import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.List;
+public class ClosestPair {
+    public static void main(String[] args) {
+        Point2D[] points = new Point2D.Double[10];
+        for (int i = 0; i < points.length; i++) {
+            points[i] = new Point2D.Double(Math.random() * 100, Math.random() * 100);
+        }
+
+        double minDistance = Double.POSITIVE_INFINITY;
+        Point2D closestPoint1 = null, closestPoint2 = null;
+
+        int gridSize = (int) Math.ceil(Math.sqrt(points.length));
+        ArrayList<Point2D>[] grid = new ArrayList[gridSize * gridSize];
+
+        for (int i = 0; i < grid.length; i++) {
+            grid[i] = new ArrayList<>();
+        }
+
+        for (Point2D point : points) {
+            int x = (int) Math.floor(point.getX() / (100 / gridSize));
+            int y = (int) Math.floor(point.getY() / (100 / gridSize));
+            grid[y * gridSize + x].add(point);
+        }
+
+        for (List<Point2D> cell : grid) {
+            if (cell.isEmpty()) {
+                continue;
+            }
+
+            Point2D[] cellPoints = cell.toArray(new Point2D[cell.size()]);
+            for (int i = 0; i < cellPoints.length; i++) {
+                for (int j = i + 1; j < cellPoints.length; j++) {
+                    double distance = cellPoints[i].distance(cellPoints[j]);
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        closestPoint1 = cellPoints[i];
+                        closestPoint2 = cellPoints[j];
+                    }
+                }
+            }
+
+            for (int i = 0; i < grid.length; i++) {
+                if (grid[i] == cell || grid[i].isEmpty()) {
+                    continue;
+                }
+
+                Point2D[] otherCellPoints = grid[i].toArray(new Point2D[grid[i].size()]);
+                for (Point2D point : cellPoints) {
+                    for (Point2D otherPoint : otherCellPoints) {
+                        double distance = point.distance(otherPoint);
+                        if (distance < minDistance) {
+                            minDistance = distance;
+                            closestPoint1 = point;
+                            closestPoint2 = otherPoint;
+                        }
+                    }
+                }
+            }
+        }
+
+        System.out.printf("Point1: (%f, %f)\n", closestPoint1.getX(), closestPoint1.getY());
+        System.out.printf("Point2: (%f, %f)\n", closestPoint2.getX(), closestPoint2.getY());
+        System.out.printf("Distance: %f", minDistance);
+    }
+}
+{% endhighlight %}
+</details>
+
+# 그리드 알고리즘
+
+그 다음으로는 그리드 알고리즘에서 거스름돈 알고리즘과 최소 신장 트리 알고리즘을 다룰 것이다.
+
+## 거스름돈 알고리즘
+
+거스름돈 알고리즘은 너무 간단한 것이라 따로 코드는 올리지 않는다.\
+[거스름돈 알고리즘이 효율적으로 돌아가는 이유가 있는데,](https://youtu.be/LY5IfEzzzgY?t=249) 그 이유는 돈이 5의 배수로 발행되기 때문이다.
+그 덕에 그리드 알고리즘으로 작성해도 가장 효율적으로 동작하게 된다.
+---
+
+## 크루스칼 알고리즘
+
+크루스칼 알고리즘은 모든 간선 중에서 가중치가 작은 간선을 차례로 선택하는 알고리즘이다.\
+여기서 중요한 점은 사이클이 생기는지 여부를 잘 판단해야 한다는 것이다.\
+다음은 크루스칼 알고리즘을 구현한 코드인데 결과값 순서가 조금 이상하지만, 답은 맞다.
+<details>
+  <summary>Kruskal</summary>
+    {% highlight JAVA %}
+    import java.util.*;
+    public class KruskalMST {
+        public static void main(String[] args) {
+            int[] cost = { 1, 1, 2, 2, 3, 4, 5, 7, 8, 9 };
+            char[] v1 = { 'b', 'c', 'b', 'a', 'd', 'b', 'a', 'd', 'a', 'e' };
+            char[] v2 = { 'c', 'f', 'f', 'd', 'e', 'd', 'e', 'f', 'b', 'f' };
+
+            ArrayList<Edge> edges = new ArrayList<>();
+            for (int i = 0; i < cost.length; i++) {
+                edges.add(new Edge(cost[i], v1[i], v2[i]));
+            }
+
+            Collections.sort(edges);
+
+            DisjointSet disjointSet = new DisjointSet();
+            for (int i = 0; i < v1.length; i++) {
+                disjointSet.makeSet(v1[i]);
+                disjointSet.makeSet(v2[i]);
+            }
+
+            Set<Edge> mst = new HashSet<>();
+            for (Edge edge : edges) {
+                if (disjointSet.findSet(edge.v1) != disjointSet.findSet(edge.v2)) {
+                    mst.add(edge);
+                    disjointSet.union(edge.v1, edge.v2);
+                }
+            }
+
+            System.out.println("Minimum Spanning Tree:");
+            for (Edge edge : mst) {
+                System.out.println(edge);
+            }
+        }
+    }
+
+    class Edge implements Comparable<Edge> {
+        int cost;
+        char v1;
+        char v2;
+
+        public Edge(int cost, char left, char right) {
+            this.cost = cost;
+            this.v1 = left;
+            this.v2 = right;
+        }
+
+        @Override
+        public int compareTo(Edge other) {
+            return Integer.compare(this.cost, other.cost);
+        }
+
+        @Override
+        public String toString() {
+            return String.format("%c(%d)%c", v1, cost, v2);
+        }
+    }
+
+    class DisjointSet {
+        Map<Character, Character> parent;
+
+        public DisjointSet() {
+            parent = new HashMap<>();
+        }
+
+        public void makeSet(char node) {
+            parent.put(node, node);
+        }
+
+        public char findSet(char node) {
+            if (parent.get(node) == node) {
+                return node;
+            }
+            char root = findSet(parent.get(node));
+            parent.put(node, root);
+            return root;
+        }
+
+        public void union(char node1, char node2) {
+            char root1 = findSet(node1);
+            char root2 = findSet(node2);
+            parent.put(root1, root2);
+        }
+    }
+    {% endhighlight %}
+</details>
+
+---
+## 프림 알고리즘
+
+다음으로는 프림 알고리즘이다. 프림 알고리즘은 한 점을 기준으로 그 점과 이어지는 가장 작은 가중치의 간선을 택한다.\
+그리고 이와 이어진 점을 슈퍼 노드처럼 하나의 점으로 취급하고 다시 그 점들 중에서 가장 작은 가중치의 간선을 택한다.\
+이를 계속해서 반복하는 것인데 개념은 쉽지만, ChatGPT도 생각보다 애를 먹는 느낌이다.\
+이상하게 출력 순서가 크루스칼 알고리즘처럼 됐는데 어쨌든 결과는 같다.
+<details>
+  <summary>Prim</summary>
+    {% highlight JAVA %}
+    import java.util.*;
+    public class PrimMST {
+        public static void main(String[] args) {
+            int[] cost = { 1, 1, 2, 2, 3, 4, 5, 7, 8, 9 };
+            char[] v1 = { 'b', 'c', 'b', 'a', 'd', 'b', 'a', 'd', 'a', 'e' };
+            char[] v2 = { 'c', 'f', 'f', 'd', 'e', 'd', 'e', 'f', 'b', 'f' };
+
+            HashMap<Integer, ArrayList<Edge>> graph = new HashMap<>();
+            for (int i = 0; i < cost.length; i++) {
+                int left = v1[i] - 'a';
+                int right = v2[i] - 'a';
+                int weight = cost[i];
+
+                // 그래프에 노드가 없는 경우 추가
+                if (!graph.containsKey(left)) {
+                    graph.put(left, new ArrayList<Edge>());
+                }
+                if (!graph.containsKey(right)) {
+                    graph.put(right, new ArrayList<Edge>());
+                }
+
+                // 양방향으로 간선 추가
+                graph.get(left).add(new Edge(left, right, weight));
+                graph.get(right).add(new Edge(right, left, weight));
+            }
+
+            boolean[] visited = new boolean[graph.size()];
+            PriorityQueue<Edge> pq = new PriorityQueue<>((e1, e2) -> e1.weight - e2.weight);
+
+            visited[0] = true;
+            for (Edge e : graph.get(0)) {
+                pq.offer(e);
+            }
+
+            Set<Edge> mst = new HashSet<>();
+            while (mst.size() < graph.size() - 1) {
+                Edge e = pq.poll();
+                if (e == null) {
+                    break;
+                }
+
+                int next = visited[e.to] ? e.from : e.to;
+                if (!visited[next]) {
+                    visited[next] = true;
+                    mst.add(e);
+                    for (Edge adj : graph.get(next)) {
+                        pq.offer(adj);
+                    }
+                }
+            }
+
+            for (Edge edge : mst) {
+                System.out.println(edge);
+            }
+        }
+
+        static class Edge {
+            int from;
+            int to;
+            int weight;
+
+            public Edge(int from, int to, int weight) {
+                this.from = from;
+                this.to = to;
+                this.weight = weight;
+            }
+
+            @Override
+            public String toString() {
+                return String.format("%c(%d)%c", from + 'a', weight, to + 'a');
+            }
+        }
+    }
+    {% endhighlight %}
+</details>
