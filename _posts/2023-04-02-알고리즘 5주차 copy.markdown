@@ -99,6 +99,7 @@ public class ClosestPair {
 }
 {% endhighlight %}
 </details>
+---
 
 ## 그리드 알고리즘
 
