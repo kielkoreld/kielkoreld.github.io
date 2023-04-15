@@ -55,8 +55,8 @@ categories: jekyll update
 연산은 우하향인 대각선이 점점 우측으로 이동하는 모양이고\
 그 안에서는 행과 열의 합이 같은 모든 상황을 고려한다.\
 글로는 이해가 어려우니 사진을 첨부하겠다. 사진을 보면 이해가 쉬울 것이다.\
-![연산 순서에 대한 사진](https://github.com/kielkoreld/kielkoreld.github.io/blob/main/_posts/photo/matrix1.jpg)
-![부분문제에 대한 사진](https://github.com/kielkoreld/kielkoreld.github.io/blob/main/_posts/photo/matrix2.jpg)
+![연산 순서에 대한 사진](https://raw.githubusercontent.com/kielkoreld/kielkoreld.github.io/blob/main/_posts/photo/matrix1.jpg)
+![부분문제에 대한 사진](https://raw.githubusercontent.com/kielkoreld/kielkoreld.github.io/blob/main/_posts/photo/matrix2.jpg)
 
 ### 배낭 문제
 이전에 그리디 알고리즘으로 부분 배낭 문제를 풀었다.\
