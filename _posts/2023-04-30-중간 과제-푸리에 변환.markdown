@@ -259,10 +259,10 @@ public class FFT {
 
 ### 너무나도 늦은 발견, 그러나 중요한 발전
 
-![이산 푸리에 변환의 실행 시간](https://raw.githubusercontent.com/kielkoreld/kielkoreld.github.io/main/_posts/photo/report/ffttime.png)
+![이산 푸리에 변환의 실행 시간](https://raw.githubusercontent.com/kielkoreld/kielkoreld.github.io/main/_posts/photo/report/dfttime.png)
 
 
-![고속 푸리에 변환의 실행 시간](https://raw.githubusercontent.com/kielkoreld/kielkoreld.github.io/main/_posts/photo/report/dfttime.png)
+![고속 푸리에 변환의 실행 시간](https://raw.githubusercontent.com/kielkoreld/kielkoreld.github.io/main/_posts/photo/report/ffttime.png)
 
 
 위의 사진을 통하여 고속 푸리에 변환이 매우 효율적이라는 사실을 알 수 있다. 따라서 과학자들은 고속 푸리에 변환을 통해 지하에서의 핵실험을 빠른 시간으로 감지할 수 있게 되었다. 이를 통하여 1996년에 포괄적 핵실험 금지 조약([CTBT](https://www.ctbto.org/our-mission/ending-nuclear-tests))을 체결하면서 모든 핵실험이 금지되었다. 물론 북한과 같이 조약에 협조하지 않는 국가도 있지만, 미국과 소련에서 주로 이뤄지던 핵실험의 통제는 고속 푸리에 변환의 가장 큰 수확이라 볼 수 있다. 다만 아쉬운 점은 부분적인 핵실험 금지 조약으로부터 푸리에 변환을 발명까지 30년 정도의 시간이 필요했고 그 사이에 핵실험이 약 1400회 정도 있었다는 점이다.(*[핵실험 연대기 (참고)](https://youtu.be/gJe7fY-yowk),  [CTBTO에서 측정한 핵실험 회수 (2000회)](https://www.ctbto.org/news-and-events/international-day-against-nuclear-tests)*) 그럼에도 더 이상의 발전을 막아주는 고속 푸리에 변환은 핵전쟁으로부터 우리를 안전하게 해주고 있다.
